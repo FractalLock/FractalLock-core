@@ -1,5 +1,6 @@
 
-
+const sodium = require("libsodium-wrappers");
+const { openVault } = require("../internal/container")
 
 async function metadataInfo(vaultPath) {
     await sodium.ready;

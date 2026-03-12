@@ -1,6 +1,16 @@
 const fs = require("fs");
-
+const sodium = require("libsodium-wrappers");
+const secrets = require("secrets.js-grempe")
 const { openVault } = require("../internal/container")
+
+const {
+    parseCreateArgs,
+    encryptFiles,
+    buildPayload,
+    buildManifest,
+    encryptManifest,
+    loadShares
+} = require("../internal/helpers")
 
 async function unlockVault({vaultPath, sharePaths}) {
     await sodium.ready;

@@ -4,10 +4,12 @@ const secrets = require("secrets.js-grempe")
 const path = require("path");
 
 const {
+    parseCreateArgs,
     encryptFiles,
     buildPayload,
     buildManifest,
-    encryptManifest
+    encryptManifest,
+    loadShares
 } = require("../internal/helpers")
 
 const { openVault } = require("../internal/container")
