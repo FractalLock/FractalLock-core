@@ -37,7 +37,7 @@ function encryptFiles(files, versionKey) {
         )
         encryptedFiles.push({
             id: fileId,
-            originalName: path.basename(file.path),
+            originalName: file.path ? path.basename(file.path) : file.name,
             size: file.data.length,
             nonce: fileNonce,
             ciphertext: fileCipher

@@ -21,20 +21,28 @@ async function updateVault({vaultPath, sharePaths, inputFiles}) {
     if (inputFiles.length === 0) {
         throw new Error("No input files provided")
     }
-    for (const filePath of inputFiles) {
-        if (!fs.existsSync(filePath)) {
-            throw new Error(`Input file does not exist: ${filePath}`)
+
+    const normalisedFiles = []
+    for (const file of inputFiles) {
+        if (typeof file === "string") {
+            const data = fs.readFileSync(file)
+            normalisedFiles.push({
+                name: path.basename(file),
+                data
+            })
+        } else {
+            normalisedFiles.push({
+                name: file.name,
+                data: Buffer.isBuffer(file.data)
+                ? file.data
+                : Buffer.from(file.data)
+            })
         }
     }
 
     if (!vaultPath || sharePaths.length === 0) {
         throw new Error("No vault path and/or keyShares selected")
     }
-
-    const files = inputFiles.map(filePath => ({
-        path: filePath,
-        data: fs.readFileSync(filePath)
-    }))
     
     let vault
     try {
@@ -109,7 +117,7 @@ async function updateVault({vaultPath, sharePaths, inputFiles}) {
     const versionKey = sodium.randombytes_buf(32)
 
     //New files are encrypted using a new version key
-    const encryptedFiles = encryptFiles(files, versionKey)
+    const encryptedFiles = encryptFiles(normalisedFiles, versionKey)
 
     // Build lookup of new files by name
     const newFilesByName = new Map()
@@ -127,7 +135,7 @@ async function updateVault({vaultPath, sharePaths, inputFiles}) {
         }
     }
 
-    // Add new / updated files
+    // Add new/updated files
     for (const f of encryptedFiles) {
         mergedFiles.push({
             id: f.id,
@@ -178,9 +186,9 @@ async function updateVault({vaultPath, sharePaths, inputFiles}) {
         vkNonce,
         recoveredRootKey
     )
-
+    const newVersionId = metadata.versions.length + 1
     metadata.versions.push({
-        id: metadata.versions.length + 1,
+        id: newVersionId,
         createdAt: new Date().toISOString(),
         encryptedVersionKey: {
             nonce: sodium.to_base64(vkNonce),
@@ -189,11 +197,11 @@ async function updateVault({vaultPath, sharePaths, inputFiles}) {
         payload: {
             files: encryptedFiles.map(f => ({
                 id: f.id,
-                versionId: metadata.versions.length + 1,
+                versionId: newVersionId,
                 size: f.size,
                 nonce: sodium.to_base64(f.nonce),
                 offset: f.offset,
-                length: f.length
+                length: f.ciphertext.length
             })),
             manifest: {
                 nonce: sodium.to_base64(manifestNonce),
