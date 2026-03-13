@@ -5,7 +5,7 @@ const { openVault } = require("../internal/container")
 async function metadataInfo(vaultPath) {
     await sodium.ready;
     if (!vaultPath) {
-        console.error("Usage: info <vault>")
+        throw new Error("Vault path not provided")
         return
     }
     
@@ -13,8 +13,7 @@ async function metadataInfo(vaultPath) {
     try {
         vault = openVault(vaultPath)
     } catch (e) {
-        console.error(e.message)
-        return
+        throw new Error(`Failed to open vault: ${e.message}`)
     }
     
     const { metadata } = vault

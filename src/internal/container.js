@@ -9,14 +9,14 @@ function openVault(vaultPath) {
     if (magic !== "LOCKBOX\0") {
         console.error("Not a valid Lockbox file")
         fs.closeSync(fd)
-        return
+        throw new Error("Invalid Lockbox file (bad magic header)")
     }
 
     const containerVersion = headerBuf.readUInt32LE(8)
     if (containerVersion !== 1) {
         console.error("Unsupported container version")
         fs.closeSync(fd)
-        return
+        throw new Error(`Unsupported container version: ${containerVersion}`)
     }
 
     const metadataLength = headerBuf.readUInt32LE(12)
@@ -30,7 +30,7 @@ function openVault(vaultPath) {
     } catch {
         console.error("Failed to parse metadata JSON")
         fs.closeSync(fd)
-        return
+        throw new Error("Failed to parse metadata JSON")
     }
 
     return {
