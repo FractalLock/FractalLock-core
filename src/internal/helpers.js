@@ -26,6 +26,8 @@ function encryptFiles(files, versionKey) {
     console.log(versionKey)
     const encryptedFiles = []
     for (const file of files) {
+        console.log(file);
+        const name = file.name ? file.name : path.basename(file.path)
         const fileId = sodium.to_hex(sodium.randombytes_buf(4))
         const fileNonce = sodium.randombytes_buf(sodium.crypto_aead_xchacha20poly1305_IETF_NPUBBYTES)
         const fileCipher = sodium.crypto_aead_xchacha20poly1305_ietf_encrypt(
@@ -37,7 +39,7 @@ function encryptFiles(files, versionKey) {
         )
         encryptedFiles.push({
             id: fileId,
-            originalName: file.path ? path.basename(file.path) : file.name,
+            originalName: name,
             size: file.data.length,
             nonce: fileNonce,
             ciphertext: fileCipher
