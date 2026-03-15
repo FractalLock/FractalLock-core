@@ -15,6 +15,8 @@ const {
 const { openVault } = require("../internal/container")
 
 async function recoverVault({vaultPath, sharePaths, requestedVersion = null, recoverPath = null}) {
+    console.log("###########################")
+    console.log(requestedVersion, recoverPath)
     await sodium.ready;
     if (!vaultPath || sharePaths.length === 0) {
         // console.error("Usage: recover <vault> <share1> <share2> ...")
@@ -49,6 +51,11 @@ async function recoverVault({vaultPath, sharePaths, requestedVersion = null, rec
     }
 
     if (recoverPath !== "outputOnly") {
+        if (requestedVersion !== null) {
+            const safeDate = new Date(version.createdAt).toISOString().slice(0,10)
+            const folderName = `Lockbox-Recovered-V${version.id}-${safeDate}`
+            recoverPath = path.join(vaultDir, folderName)
+        }
         if (!fs.existsSync(recoverPath)) {
             fs.mkdirSync(recoverPath, { recursive: true })
         }

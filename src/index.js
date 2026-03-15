@@ -5,6 +5,7 @@ const deleteFromVault = require("./vault/deleteFromVault")
 const unlockVault = require("./vault/unlockVault")
 const metadataInfo = require("./vault/metadataInfo")
 const readVaultFile = require("./vault/readVaultFile")
+const listVersions = require("./vault/listVersions")
 
 module.exports = {
   createVault,
@@ -13,5 +14,6 @@ module.exports = {
   deleteFromVault,
   unlockVault,
   readVaultFile,
-  metadataInfo
+  metadataInfo,
+  listVersions
 }

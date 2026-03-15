@@ -190,6 +190,7 @@ async function updateVault({vaultPath, sharePaths, inputFiles}) {
     metadata.versions.push({
         id: newVersionId,
         createdAt: new Date().toISOString(),
+        fileCount: mergedFiles.length,
         encryptedVersionKey: {
             nonce: sodium.to_base64(vkNonce),
             ciphertext: sodium.to_base64(encryptedVk)
