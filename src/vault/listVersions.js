@@ -8,8 +8,7 @@ async function listVersions(vaultPath) {
     const versions = metadata.versions
     .map(v => ({
         id: v.id,
-        createdAt: v.createdAt,
-        fileCount: v.payload.files.length
+        createdAt: v.createdAt
     }))
     .sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt))
 
