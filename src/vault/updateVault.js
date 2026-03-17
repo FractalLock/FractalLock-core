@@ -217,7 +217,7 @@ async function updateVault({vaultPath, sharePaths, inputFiles}) {
     const metadataJson = Buffer.from(JSON.stringify(metadata), "utf8")
 
     const header = Buffer.alloc(16)
-    header.write("LOCKBOX\0", 0, "ascii")
+    header.write("FRACTALLOCK\0", 0, "ascii")
     header.writeUInt32LE(1, 8)
     header.writeUInt32LE(metadataJson.length, 12)
 

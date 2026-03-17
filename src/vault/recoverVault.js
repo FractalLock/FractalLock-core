@@ -53,7 +53,7 @@ async function recoverVault({vaultPath, sharePaths, requestedVersion = null, rec
     if (recoverPath !== "outputOnly") {
         if (requestedVersion !== null) {
             const safeDate = new Date(version.createdAt).toISOString().slice(0,10)
-            const folderName = `Lockbox-Recovered-V${version.id}-${safeDate}`
+            const folderName = `FractalLock-Recovered-V${version.id}-${safeDate}`
             recoverPath = path.join(vaultDir, folderName)
         }
         if (!fs.existsSync(recoverPath)) {

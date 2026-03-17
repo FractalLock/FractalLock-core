@@ -36,7 +36,7 @@ async function createVault({vaultDir, shares, threshold, inputFiles}) {
         throw new Error("Too many shares")
     }
     
-    const vaultPath = path.join(vaultDir, 'myvault.lockbox')
+    const vaultPath = path.join(vaultDir, 'myvault.frx')
 
     if (fs.existsSync(vaultPath)) {
         throw new Error('A vault already exists in this directory')
@@ -86,7 +86,7 @@ async function createVault({vaultDir, shares, threshold, inputFiles}) {
     // ---- BUILD METADATA ----
     const metadata = {
         header: {
-            magic: "LOCKBOX",
+            magic: "FRACTALLOCK",
             formatVersion: 1,
             cipher: "xchacha20-poly1305"
         },
@@ -131,7 +131,7 @@ async function createVault({vaultDir, shares, threshold, inputFiles}) {
     const metadataJson = Buffer.from(JSON.stringify(metadata), "utf8")
 
     const header = Buffer.alloc(16)
-    header.write("LOCKBOX\0", 0, "ascii")
+    header.write("FRACTALLOCK\0", 0, "ascii")
     header.writeUInt32LE(1, 8)                // container version
     header.writeUInt32LE(metadataJson.length, 12)
     
@@ -142,7 +142,7 @@ async function createVault({vaultDir, shares, threshold, inputFiles}) {
     ])
         
     fs.writeFileSync(vaultPath, container)
-    // console.log("Vault written to myvault.lockbox")
+    // console.log("Vault written to myvault.frx")
 
     const rootKeyHex = sodium.to_hex(rootKey)
     const shareList = secrets.share(rootKeyHex, shares, threshold)

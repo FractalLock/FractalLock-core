@@ -133,7 +133,7 @@ async function deleteFromVault({vaultPath, sharePaths, fileName}) {
     const newMetadataBuf = Buffer.from(JSON.stringify(metadata), "utf8")
     
     const newHeader = Buffer.alloc(16)
-    newHeader.write("LOCKBOX\0", 0, "ascii")
+    newHeader.write("FRACTALLOCK\0", 0, "ascii")
     newHeader.writeUInt32LE(1, 8)
     newHeader.writeUInt32LE(newMetadataBuf.length, 12)
     
