@@ -6,10 +6,10 @@ function openVault(vaultPath) {
     fs.readSync(fd, headerBuf, 0, 16, 0)
 
     const magic = headerBuf.slice(0, 8).toString("ascii")
-    if (magic !== "LOCKBOX\0") {
-        console.error("Not a valid Lockbox file")
+    if (magic !== "FRACTALBOX\0") {
+        console.error("Not a valid FractalBox file")
         fs.closeSync(fd)
-        throw new Error("Invalid Lockbox file (bad magic header)")
+        throw new Error("Invalid FractalBox file (bad magic header)")
     }
 
     const containerVersion = headerBuf.readUInt32LE(8)
