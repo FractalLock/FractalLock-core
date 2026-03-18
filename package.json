@@ -1,10 +1,14 @@
 {
-  "name": "lockbox-core",
-  "version": "1.0.0",
-  "description": "Cryptographic vault engine for Lockbox",
-  "main": "src/index.js",
-  "dependencies": {
-    "libsodium-wrappers": "^0.7.16",
-    "secrets.js-grempe": "^2.0.0"
-  }
+    "name": "@fractallock/core",
+    "version": "1.0.0",
+    "description": "Cryptographic vault engine for FractalLock",
+    "main": "dist/index.js",
+    "files": ["dist"],
+    "dependencies": {
+        "libsodium-wrappers": "^0.7.16",
+        "secrets.js-grempe": "^2.0.0"
+    },
+    "scripts": {
+    "build": "rm -rf dist && mkdir dist && cp -r src/* dist/"
+    }
 }
