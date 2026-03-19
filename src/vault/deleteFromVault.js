@@ -132,10 +132,11 @@ async function deleteFromVault({vaultPath, sharePaths, fileName}) {
     // ---- Rewrite metadata ----
     const newMetadataBuf = Buffer.from(JSON.stringify(metadata), "utf8")
     
-    const newHeader = Buffer.alloc(16)
+
+    const newHeader = Buffer.alloc(20)
     newHeader.write("FRACTALLOCK\0", 0, "ascii")
-    newHeader.writeUInt32LE(1, 8)
-    newHeader.writeUInt32LE(newMetadataBuf.length, 12)
+    newHeader.writeUInt32LE(1, 12)
+    newHeader.writeUInt32LE(newMetadataBuf.length, 16)
     
     const payload = fs.readFileSync(vaultPath).slice(payloadStart)
     

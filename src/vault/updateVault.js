@@ -216,10 +216,11 @@ async function updateVault({vaultPath, sharePaths, inputFiles}) {
         
     const metadataJson = Buffer.from(JSON.stringify(metadata), "utf8")
 
-    const header = Buffer.alloc(16)
+    const header = Buffer.alloc(20)
     header.write("FRACTALLOCK\0", 0, "ascii")
-    header.writeUInt32LE(1, 8)
-    header.writeUInt32LE(metadataJson.length, 12)
+    header.writeUInt32LE(1, 12)
+    header.writeUInt32LE(metadataJson.length, 16)
+    
 
     const payload = fs.readFileSync(vaultPath).slice(payloadStart)
 
