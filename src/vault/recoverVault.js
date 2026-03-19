@@ -190,7 +190,7 @@ async function recoverVault({vaultPath, sharePaths, requestedVersion = null, rec
         const outputName = `recovered_${fileEntry.name}`
         let outputPath = path.join(recoverPath, outputName)
         if (recoverPath !== "outputOnly") {
-            fs.writeFileSync(outputPath, decryptedFile)
+            fs.writeFileSync(outputPath, decryptedFile, { flag: "wx" })
         } else {
             outputPath = outputName
         }

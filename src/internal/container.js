@@ -2,27 +2,27 @@ const fs = require("fs");
 
 function openVault(vaultPath) {
     const fd = fs.openSync(vaultPath, "r")
-    const headerBuf = Buffer.alloc(16)
-    fs.readSync(fd, headerBuf, 0, 16, 0)
+    const headerBuf = Buffer.alloc(20)
+    fs.readSync(fd, headerBuf, 0, 20, 0)
 
-    const magic = headerBuf.slice(0, 8).toString("ascii")
-    if (magic !== "FRACTALBOX\0") {
-        console.error("Not a valid FractalBox file")
+    const magic = headerBuf.slice(0, 12).toString("ascii")
+    if (magic !== "FRACTALLOCK\0") {
+        console.error(`Not a valid FractalLock file: ${magic}`)
         fs.closeSync(fd)
-        throw new Error("Invalid FractalBox file (bad magic header)")
+        throw new Error("Invalid FractalLock file (bad magic header)")
     }
 
-    const containerVersion = headerBuf.readUInt32LE(8)
+    const containerVersion = headerBuf.readUInt32LE(12)
     if (containerVersion !== 1) {
         console.error("Unsupported container version")
         fs.closeSync(fd)
         throw new Error(`Unsupported container version: ${containerVersion}`)
     }
 
-    const metadataLength = headerBuf.readUInt32LE(12)
+    const metadataLength = headerBuf.readUInt32LE(16)
 
     const metadataBuf = Buffer.alloc(metadataLength)
-    fs.readSync(fd, metadataBuf, 0, metadataLength, 16)
+    fs.readSync(fd, metadataBuf, 0, metadataLength, 20)
 
     let metadata
     try {
@@ -37,7 +37,7 @@ function openVault(vaultPath) {
         fd,
         metadata,
         metadataLength,
-        payloadStart: 16 + metadataLength
+        payloadStart: 20 + metadataLength
     }
 
 }

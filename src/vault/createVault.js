@@ -86,7 +86,7 @@ async function createVault({vaultDir, shares, threshold, inputFiles}) {
     // ---- BUILD METADATA ----
     const metadata = {
         header: {
-            magic: "FRACTALLOCK",
+            magic: "FRACTALLOCK\0",
             formatVersion: 1,
             cipher: "xchacha20-poly1305"
         },
@@ -130,10 +130,10 @@ async function createVault({vaultDir, shares, threshold, inputFiles}) {
 
     const metadataJson = Buffer.from(JSON.stringify(metadata), "utf8")
 
-    const header = Buffer.alloc(16)
+    const header = Buffer.alloc(20)
     header.write("FRACTALLOCK\0", 0, "ascii")
-    header.writeUInt32LE(1, 8)                // container version
-    header.writeUInt32LE(metadataJson.length, 12)
+    header.writeUInt32LE(1, 12)                // container version
+    header.writeUInt32LE(metadataJson.length, 16)
     
     const container = Buffer.concat([
         header,
@@ -141,7 +141,7 @@ async function createVault({vaultDir, shares, threshold, inputFiles}) {
         payloadBuffer
     ])
         
-    fs.writeFileSync(vaultPath, container)
+    fs.writeFileSync(vaultPath, container, { flag: "wx" })
     // console.log("Vault written to myvault.frx")
 
     const rootKeyHex = sodium.to_hex(rootKey)
