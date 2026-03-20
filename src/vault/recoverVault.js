@@ -1,3 +1,5 @@
+// Copyright (c) 2026 FractalLock. Use of this source code is governed by the FractalLock Core License found in the LICENSE file.
+
 const fs = require("fs");
 const sodium = require("libsodium-wrappers");
 const secrets = require("secrets.js-grempe")
@@ -15,11 +17,9 @@ const {
 const { openVault } = require("../internal/container")
 
 async function recoverVault({vaultPath, sharePaths, requestedVersion = null, recoverPath = null}) {
-    console.log("###########################")
-    console.log(requestedVersion, recoverPath)
+    // console.log(requestedVersion, recoverPath)
     await sodium.ready;
     if (!vaultPath || sharePaths.length === 0) {
-        // console.error("Usage: recover <vault> <share1> <share2> ...")
         throw new Error("No vault path and/or keyShares selected")
         return
     }
@@ -109,9 +109,9 @@ async function recoverVault({vaultPath, sharePaths, requestedVersion = null, rec
         }
     }
 
-    // const payloadStart = 16 + metadataLength
-    console.log(metadata.versions)
-    console.log(`Recovering version ${version.id} (${version.createdAt})`)
+    // const payloadStart = 20 + metadataLength
+    // console.log(metadata.versions)
+    // console.log(`Recovering version ${version.id} (${version.createdAt})`)
 
      //Manifest buffer info is taken from the metadata
     const manifestMeta = version.payload.manifest
@@ -194,7 +194,7 @@ async function recoverVault({vaultPath, sharePaths, requestedVersion = null, rec
         } else {
             outputPath = outputName
         }
-        console.log(`Recovered ${outputName}`)
+        // console.log(`Recovered ${outputName}`)
         recoveredFiles.push(outputPath)
         sodium.memzero(encryptedFileBuf)
     }

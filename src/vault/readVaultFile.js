@@ -1,3 +1,5 @@
+// Copyright (c) 2026 FractalLock. Use of this source code is governed by the FractalLock Core License found in the LICENSE file.
+
 const fs = require("fs");
 const sodium = require("libsodium-wrappers");
 const secrets = require("secrets.js-grempe")
@@ -73,9 +75,9 @@ async function readVaultFile({vaultPath, sharePaths, fileName}) {
         }
     }
 
-    // const payloadStart = 16 + metadataLength
-    console.log(metadata.versions)
-    console.log(`Recovering version ${version.id} (${version.createdAt})`)
+    // const payloadStart = 20 + metadataLength
+    // console.log(metadata.versions)
+    // console.log(`Recovering version ${version.id} (${version.createdAt})`)
 
      //Manifest buffer info is taken from the metadata
     const manifestMeta = version.payload.manifest

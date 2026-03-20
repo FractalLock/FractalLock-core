@@ -1,3 +1,5 @@
+// Copyright (c) 2026 FractalLock. Use of this source code is governed by the FractalLock Core License found in the LICENSE file.
+
 const fs = require("fs");
 const sodium = require("libsodium-wrappers");
 const secrets = require("secrets.js-grempe")
@@ -17,7 +19,7 @@ const { openVault } = require("../internal/container")
 async function updateVault({vaultPath, sharePaths, inputFiles}) {
     await sodium.ready;
     
-    console.log(vaultPath, sharePaths, inputFiles)
+    // console.log(vaultPath, sharePaths, inputFiles)
     if (inputFiles.length === 0) {
         throw new Error("No input files provided")
     }
@@ -147,8 +149,8 @@ async function updateVault({vaultPath, sharePaths, inputFiles}) {
         files: mergedFiles
     }
 
-    console.log("merged manifest:")
-    console.log(mergedManifest)
+    // console.log("merged manifest:")
+    // console.log(mergedManifest)
 
     //A merged manifest has been created that shows all the files that will be in this version
     //encrypted files for this version will just be the file that has been added
@@ -212,7 +214,7 @@ async function updateVault({vaultPath, sharePaths, inputFiles}) {
         }
     })
 
-    console.log(metadata)
+    // console.log(metadata)
         
     const metadataJson = Buffer.from(JSON.stringify(metadata), "utf8")
 
@@ -234,10 +236,10 @@ async function updateVault({vaultPath, sharePaths, inputFiles}) {
     fs.writeFileSync(vaultPath, container)
     fs.closeSync(fd)
 
-    console.log("Vault updated")
+    // console.log("Vault updated")
     sodium.memzero(recoveredRootKey)
     sodium.memzero(versionKey)
-    console.log("Root key destroyed from memory")
+    // console.log("Root key destroyed from memory")
 
     return {
         vaultPath: vaultPath,
