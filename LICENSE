@@ -1,0 +1,51 @@
+FractalLock Core License (Source-Available)
+
+Copyright (c) 2026 FractalLock
+
+1. Purpose
+
+This source code is made publicly available for the purposes of transparency,
+security review, and independent auditing.
+
+2. Definitions
+
+- "Commercial Purpose" means any use of the Software by a for-profit entity, or any use intended to generate revenue, including but not limited to: internal business operations, integration into a paid product/service, or use in professional consulting.
+
+- "Software" means the FractalLock Core source code, documentation, and any accompanying files provided under this license.
+
+- "Derivative Work" means any software or other work that is based upon, or incorporates any part of, the Software.
+
+- "Personal Use" means non-commercial use by an individual for private study, research, or hobbyist projects where no fee is charged and no commercial entity benefits.
+
+- "Pro Licence" refers to a separate, paid agreement granted by FractalLock that authorises Commercial Use
+
+3. Permitted Use
+
+You are permitted to:
+
+- View, study, and audit the source code
+- Use the code for personal, non-commercial research or evaluation
+
+4. Restrictions
+
+4.1 Commercial Use
+You may not use this Software for any Commercial Purpose without a valid Pro License from FractalLock.
+
+4.2 Prohibited Acts
+Regardless of whether you possess a Pro License, you may NOT, without explicit separate written permission:
+
+- Redistribute the source code, in whole or in part, to any third party.
+- Modify and redistribute the Software as a standalone product.
+- Create derivative works for public distribution.
+- Use this code to create a product or service that competes directly with FractalLock.
+
+5. No Warranty
+
+This software is provided "as is", without warranty of any kind, express or implied,
+including but not limited to the warranties of merchantability, fitness for a
+particular purpose, and noninfringement. In no event shall the authors be liable
+for any claim, damages, or other liability.
+
+6. Acceptance
+
+By accessing, copying, or using this source code, you agree to the terms of this license.

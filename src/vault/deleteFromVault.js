@@ -1,3 +1,5 @@
+// Copyright (c) 2026 FractalLock. Use of this source code is governed by the FractalLock Core License found in the LICENSE file.
+
 const fs = require("fs");
 const sodium = require("libsodium-wrappers");
 const secrets = require("secrets.js-grempe")
@@ -16,8 +18,7 @@ const { openVault } = require("../internal/container")
 
 async function deleteFromVault({vaultPath, sharePaths, fileName}) {
     await sodium.ready;
-    console.log("DEBUG")
-    console.log(fileName)
+    // console.log(fileName)
     if (!vaultPath || sharePaths.length === 0) {
         // throw new Error("Usage: delete <vault> <shares...> <filename>")
         throw new Error("No vault path and/or keyShares selected")
@@ -84,7 +85,7 @@ async function deleteFromVault({vaultPath, sharePaths, fileName}) {
         throw new Error(`File not found: ${fileName}`)
     }
     
-    console.log(`Deleted ${fileName} (logical)`)
+    // console.log(`Deleted ${fileName} (logical)`)
 
     // ---- Create new version key ----
     const newVersionKey = sodium.randombytes_buf(32)
@@ -149,7 +150,7 @@ async function deleteFromVault({vaultPath, sharePaths, fileName}) {
     sodium.memzero(newVersionKey)
     fs.closeSync(fd)
     
-    console.log("Logical delete complete")
+    // console.log("Logical delete complete")
     return {
         vaultPath: vaultPath,
         newVersionId: metadata.versions.length

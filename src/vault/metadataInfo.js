@@ -1,3 +1,4 @@
+// Copyright (c) 2026 FractalLock. Use of this source code is governed by the FractalLock Core License found in the LICENSE file.
 
 const sodium = require("libsodium-wrappers");
 const { openVault } = require("../internal/container")
