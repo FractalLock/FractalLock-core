@@ -79,12 +79,17 @@ function buildPayload(encryptedFiles, manifestCipher) {
     }
 }
 
-function buildManifest(encryptedFiles) {
+function buildManifest(encryptedFiles, vaultContext = {}) {
     return {
         files: encryptedFiles.map(f => ({
             id: f.id,
             name: f.originalName
-        }))
+        })),
+        context: {
+            creator: vaultContext.creator || null,
+            label: vaultContext.label || null,
+            createdAt: new Date().toISOString()
+        }
     }
 }
 

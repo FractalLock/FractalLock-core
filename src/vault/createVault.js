@@ -15,7 +15,7 @@ const {
 } = require("../internal/helpers")
 
 
-async function createVault({vaultDir, shares, threshold, inputFiles}) {
+async function createVault({vaultDir, shares, threshold, inputFiles, vaultContext}) {
     await sodium.ready;
 
     if (!vaultDir) {
@@ -76,7 +76,10 @@ async function createVault({vaultDir, shares, threshold, inputFiles}) {
     // Manifest defines the logical contents of a version.
     // Files not present here are considered deleted,
     // even if their encrypted payload still exists.
-    const manifest = buildManifest(encryptedFiles)
+    const manifest = buildManifest(encryptedFiles, {
+        creator: vaultContext.creator || null, 
+        label: vaultContext.label || null
+    })
     
     const { cipher: manifestCipher, nonce: manifestNonce } = encryptManifest(manifest, versionKey)
     

@@ -207,7 +207,11 @@ async function recoverVault({vaultPath, sharePaths, requestedVersion = null, rec
 
 
     return {
-        recoveredFiles
+        recoveredFiles,
+        context: {
+            creator: manifest.context?.creator || null,
+            label: manifest.context?.label || null
+        }
     }
 }
 
