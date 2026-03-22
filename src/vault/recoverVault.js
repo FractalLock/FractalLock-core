@@ -54,7 +54,7 @@ async function recoverVault({vaultPath, sharePaths, requestedVersion = null, rec
         if (requestedVersion !== null) {
             const safeDate = new Date(version.createdAt).toISOString().slice(0,10)
             const folderName = `FractalLock-Recovered-V${version.id}-${safeDate}`
-            recoverPath = path.join(vaultDir, folderName)
+            recoverPath = path.join(recoverPath, folderName)
         }
         if (!fs.existsSync(recoverPath)) {
             fs.mkdirSync(recoverPath, { recursive: true })

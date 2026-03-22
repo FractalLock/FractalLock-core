@@ -24,27 +24,62 @@ async function updateVault({vaultPath, sharePaths, inputFiles}) {
         throw new Error("No input files provided")
     }
 
+    if (!vaultPath || sharePaths.length === 0) {
+        throw new Error("No vault path and/or keyShares selected")
+    }
+
+    const MAX_NEW_DATA = 500 * 1024 * 1024 // 500MB
+    const MAX_TOTAL_VAULT_SIZE = 1 * 1024 * 1024 * 1024 // 1GB (safe ceiling)
+
+    let totalNewSize = 0
+
     const normalisedFiles = []
     for (const file of inputFiles) {
         if (typeof file === "string") {
+            const stats = fs.statSync(file)
+            if (!stats.isFile()) {
+                throw new Error(`Not a valid file: ${file}`)
+            }
+            totalNewSize += stats.size
+            if (totalNewSize > MAX_NEW_DATA) {
+                throw new Error(
+                    `Update exceeds 500MB limit (selected ${(totalNewSize / (1024 * 1024)).toFixed(2)} MB)`
+                )
+            }
             const data = fs.readFileSync(file)
             normalisedFiles.push({
                 name: path.basename(file),
                 data
             })
         } else {
-            normalisedFiles.push({
-                name: file.name,
-                data: Buffer.isBuffer(file.data)
+            const buffer = Buffer.isBuffer(file.data)
                 ? file.data
                 : Buffer.from(file.data)
+
+            totalNewSize += buffer.length
+
+            if (totalNewSize > MAX_NEW_DATA) {
+                throw new Error(
+                    `Update exceeds 500MB limit (selected ${(totalNewSize / (1024 * 1024)).toFixed(2)} MB)`
+                )
+            }
+            normalisedFiles.push({
+                name: file.name,
+                data: buffer
             })
         }
     }
 
-    if (!vaultPath || sharePaths.length === 0) {
-        throw new Error("No vault path and/or keyShares selected")
+    const currentVaultSize = fs.statSync(vaultPath).size
+    const estimatedNewSize = currentVaultSize + totalNewSize
+
+    if (estimatedNewSize > MAX_TOTAL_VAULT_SIZE) {
+        throw new Error(
+            `Vault would exceed 1GB limit after update.\n\nCurrent: ${(currentVaultSize / (1024 * 1024)).toFixed(2)} MB\nAdding: ${(totalNewSize / (1024 * 1024)).toFixed(2)} MB`
+        )
     }
+
+    
     
     let vault
     try {

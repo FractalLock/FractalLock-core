@@ -50,6 +50,26 @@ async function createVault({vaultDir, shares, threshold, inputFiles, vaultContex
         }
     }
 
+    const MAX_TOTAL_SIZE = 1000 * 1024 * 1024 // 1000MB
+
+    let totalSize = 0
+
+    for (const filePath of inputFiles) {
+    const stats = fs.statSync(filePath)
+
+    if (!stats.isFile()) {
+        throw new Error(`Not a valid file: ${filePath}`)
+    }
+
+    totalSize += stats.size
+
+    if (totalSize > MAX_TOTAL_SIZE) {
+        throw new Error(
+        `Vault size limit exceeded (1GB max).\n\nSelected: ${(stats.size / (1024 * 1024)).toFixed(2)} MB\nReduce file size or split into multiple vaults.`
+        )
+    }
+    }
+
     
     const files = inputFiles.map(filePath => ({
         path: filePath,
