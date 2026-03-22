@@ -1,14 +1,16 @@
 {
     "name": "@fractallock/core",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "description": "Cryptographic vault engine for FractalLock",
     "main": "dist/index.js",
-    "files": ["dist"],
+    "files": [
+        "dist"
+    ],
     "dependencies": {
         "libsodium-wrappers": "^0.7.16",
         "secrets.js-grempe": "^2.0.0"
     },
     "scripts": {
-    "build": "rm -rf dist && mkdir dist && cp -r src/* dist/"
+        "build": "rm -rf dist && mkdir dist && cp -r src/* dist/"
     }
 }
