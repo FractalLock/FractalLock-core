@@ -16,10 +16,10 @@ const {
 
 const { openVault } = require("../internal/container")
 
-async function recoverVault({vaultPath, sharePaths, requestedVersion = null, recoverPath = null}) {
+async function recoverVault({vaultPath, shares, requestedVersion = null, recoverPath = null}) {
     // console.log(requestedVersion, recoverPath)
     await sodium.ready;
-    if (!vaultPath || sharePaths.length === 0) {
+    if (!vaultPath || shares.length === 0) {
         throw new Error("No vault path and/or keyShares selected")
         return
     }
@@ -65,7 +65,10 @@ async function recoverVault({vaultPath, sharePaths, requestedVersion = null, rec
     
     let recoveredRootKey
     try {
-        const shares = loadShares(sharePaths, threshold)
+        if (!shares || shares.length < threshold) {
+            throw new Error(`Not enough shares provided (need ${threshold})`)
+        }
+
         recoveredRootKey = sodium.from_hex(
             secrets.combine(shares)
         )

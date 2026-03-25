@@ -14,9 +14,9 @@ const {
     loadShares
 } = require("../internal/helpers")
 
-async function unlockVault({vaultPath, sharePaths}) {
+async function unlockVault({vaultPath, shares}) {
     await sodium.ready;
-    if (!vaultPath || sharePaths.length === 0) {
+    if (!vaultPath || shares.length === 0) {
         console.error("Usage: recover <vault> <share1> <share2> ...")
         return
     }
@@ -38,15 +38,18 @@ async function unlockVault({vaultPath, sharePaths}) {
     
     let recoveredRootKey
     try {
-        const shares = loadShares(sharePaths, threshold)
-        recoveredRootKey = sodium.from_hex(
-            secrets.combine(shares)
-        )
-        } catch (err) {
-        console.error(err.message)
-        fs.closeSync(fd)
-        throw err
-    }
+            if (!shares || shares.length < threshold) {
+                throw new Error(`Not enough shares provided (need ${threshold})`)
+            }
+    
+            recoveredRootKey = sodium.from_hex(
+                secrets.combine(shares)
+            )
+            } catch (err) {
+            console.error(err.message)
+            fs.closeSync(fd)
+            throw err
+        }
 
     // Cache for decrypted version keys
     const versionKeyCache = new Map()
