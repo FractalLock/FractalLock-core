@@ -16,7 +16,7 @@ const {
 
 const { openVault } = require("../internal/container")
 
-async function updateVault({vaultPath, sharePaths, inputFiles}) {
+async function updateVault({vaultPath, shares, inputFiles}) {
     await sodium.ready;
     
     // console.log(vaultPath, sharePaths, inputFiles)
@@ -24,7 +24,7 @@ async function updateVault({vaultPath, sharePaths, inputFiles}) {
         throw new Error("No input files provided")
     }
 
-    if (!vaultPath || sharePaths.length === 0) {
+    if (!vaultPath || shares.length === 0) {
         throw new Error("No vault path and/or keyShares selected")
     }
 
@@ -94,16 +94,18 @@ async function updateVault({vaultPath, sharePaths, inputFiles}) {
     const { threshold } = metadata.recovery
     
     let recoveredRootKey
-    try {
-        const shares = loadShares(sharePaths, threshold)
-        recoveredRootKey = sodium.from_hex(
-            secrets.combine(shares)
-        )
-        } catch (err) {
-        console.error(err.message)
-        fs.closeSync(fd)
-        throw err
-    }
+        try {
+            if (!shares || shares.length < threshold) {
+                throw new Error(`Not enough shares provided (need ${threshold})`)
+            }
+            recoveredRootKey = sodium.from_hex(
+                secrets.combine(shares)
+            )
+            } catch (err) {
+            console.error(err.message)
+            fs.closeSync(fd)
+            throw err
+        }
 
     const prevVersion = metadata.versions[metadata.versions.length - 1]
     

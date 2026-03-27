@@ -16,10 +16,10 @@ const {
 
 const { openVault } = require("../internal/container")
 
-async function deleteFromVault({vaultPath, sharePaths, fileName}) {
+async function deleteFromVault({vaultPath, shares, fileName}) {
     await sodium.ready;
     // console.log(fileName)
-    if (!vaultPath || sharePaths.length === 0) {
+    if (!vaultPath || shares.length === 0) {
         // throw new Error("Usage: delete <vault> <shares...> <filename>")
         throw new Error("No vault path and/or keyShares selected")
     }
@@ -36,16 +36,19 @@ async function deleteFromVault({vaultPath, sharePaths, fileName}) {
     const { threshold } = metadata.recovery
     
     let recoveredRootKey
-    try {
-        const shares = loadShares(sharePaths, threshold)
-        recoveredRootKey = sodium.from_hex(
-            secrets.combine(shares)
-        )
-        } catch (err) {
-        console.error(err.message)
-        fs.closeSync(fd)
-        return
-    }
+        try {
+            if (!shares || shares.length < threshold) {
+                throw new Error(`Not enough shares provided (need ${threshold})`)
+            }
+    
+            recoveredRootKey = sodium.from_hex(
+                secrets.combine(shares)
+            )
+            } catch (err) {
+            console.error(err.message)
+            fs.closeSync(fd)
+            throw err
+        }
     
     const prevVersion = metadata.versions.at(-1)
     
