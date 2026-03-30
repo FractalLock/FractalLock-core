@@ -4,6 +4,7 @@ const fs = require("fs");
 const sodium = require("libsodium-wrappers");
 const secrets = require("secrets.js-grempe")
 const path = require("path");
+const crypto = require('crypto');
 
 const {
     parseCreateArgs,
@@ -165,7 +166,7 @@ async function createVault({vaultDir, shares, threshold, inputFiles, vaultContex
         metadataJson,
         payloadBuffer
     ])
-        
+    
     fs.writeFileSync(vaultPath, container, { flag: "wx" })
     // console.log("Vault written to myvault.frx")
 
@@ -180,13 +181,19 @@ async function createVault({vaultDir, shares, threshold, inputFiles, vaultContex
     sodium.memzero(versionKey)
     // console.log("Root key destroyed from memory")
 
+    const fingerprint = crypto
+        .createHash('sha256')
+        .update(payloadBuffer)
+        .digest('hex')
+        .slice(0, 8)
     return {
         vaultPath: vaultPath,
         sharesGenerated: shareList.length,
         shares: shareList.map((share, index) => ({
             id: index + 1,
             data: share
-        }))
+        })),
+        fingerprint
     }
 }
 
