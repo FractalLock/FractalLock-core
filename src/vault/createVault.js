@@ -39,7 +39,12 @@ async function createVault({vaultDir, shares, threshold, inputFiles, vaultContex
         throw new Error("Too many shares")
     }
     
-    const vaultPath = path.join(vaultDir, 'myvault.frx')
+    const vaultLabel = (vaultContext.label || 'myvault')
+        .replace(/[^a-z0-9_\-']/gi, '_')
+        .replace(/_{2,}/g, '_')
+        .replace(/^_+|_+$/g, '')
+        || 'myvault'
+    const vaultPath = path.join(vaultDir, `${vaultLabel}.frx`)
 
     if (fs.existsSync(vaultPath)) {
         throw new Error('A vault already exists in this directory')
@@ -99,7 +104,8 @@ async function createVault({vaultDir, shares, threshold, inputFiles, vaultContex
     // even if their encrypted payload still exists.
     const manifest = buildManifest(encryptedFiles, {
         creator: vaultContext.creator || null, 
-        label: vaultContext.label || null
+        label: vaultContext.label || null,
+        keyLabels: vaultContext.keyLabels || null
     })
     
     const { cipher: manifestCipher, nonce: manifestNonce } = encryptManifest(manifest, versionKey)

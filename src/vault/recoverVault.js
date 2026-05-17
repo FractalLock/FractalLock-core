@@ -99,6 +99,11 @@ async function recoverVault({vaultPath, shares, requestedVersion = null, recover
             recoveredRootKey
         )
 
+        console.log(`Decrypted version key for version ${versionId}`)
+        console.log(sodium.from_base64(v.encryptedVersionKey.ciphertext))
+        console.log(sodium.from_base64(v.encryptedVersionKey.nonce))
+        console.log(vk)
+
         versionKeyCache.set(versionId, vk)
         return vk
     }
